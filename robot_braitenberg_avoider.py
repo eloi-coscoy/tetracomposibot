@@ -1,3 +1,4 @@
+
 from robot import * 
 
 nb_robots = 0
@@ -5,7 +6,7 @@ debug = True
 
 class Robot_player(Robot):
 
-    team_name = "Dumb"
+    team_name = "Gen"
     robot_id = -1
     iteration = 0
 
@@ -40,8 +41,11 @@ class Robot_player(Robot):
                 print ("\trobot's name (if relevant)      =",sensor_robot)
                 print ("\trobot's team (if relevant)      =",sensor_team)
 
-        translation = 0.5 # A MODIFIER
-        rotation = 0.5 # A MODIFIER
 
+
+        translation = sensors[sensor_front] # A MODIFIER
+        rotation = (1-sensors[sensor_front])*random.choice([1,-1])+ (1-sensors[sensor_front_right])+ (1-sensors[sensor_front_left])*-1# A MODIFIER
+        print(rotation)
+        
         self.iteration = self.iteration + 1        
         return translation, rotation, False
