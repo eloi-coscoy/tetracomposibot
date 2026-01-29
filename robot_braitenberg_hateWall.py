@@ -44,8 +44,8 @@ class Robot_player(Robot):
 
 
         translation = 1 # A MODIFIER
-        rotation = (1-sensor_to_robot[sensor_front])+ (1-sensor_to_robot[sensor_front_right])+ (1-sensor_to_robot[sensor_front_left])*-1# A MODIFIER
-        print(rotation)
+        rotation = (1-sensor_to_wall[sensor_front])+ (1-sensor_to_wall[sensor_front_right])+ (1-sensor_to_wall[sensor_front_left])*-1# A MODIFIER
+        #print(rotation)
         
         self.iteration = self.iteration + 1        
         return translation, rotation, False

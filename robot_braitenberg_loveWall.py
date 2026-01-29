@@ -45,7 +45,7 @@ class Robot_player(Robot):
 
         translation = 1 # A MODIFIER
         rotation =sensor_to_wall[sensor_front]+ (1-sensor_to_wall[sensor_front_right])*random.choice([1,-1])+ (1-(sensor_to_wall[sensor_front]+ sensor_to_wall[sensor_front_left])*-1)*random.choice([1,-1])# A MODIFIER
-        print(rotation)
+        #print(rotation)
         
         self.iteration = self.iteration + 1        
         return translation, rotation, False
