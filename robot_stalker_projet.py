@@ -47,7 +47,7 @@ class Robot_player(Robot):
 
         # vitesse max mais ralentit lors des murs pour eviter des situations de blocage contre le mur
                         #avancement par defaut           si repère un enemie devant                                                          si repère un enemie                                                                ralenti/recul si mur                     si robot allié alors recul/ralentit                                         
-        translation = sensor_to_robot[sensor_front]*1 + (int(self.team!=sensor_team[sensor_front])*(1-sensor_to_robot[sensor_front])*0.8) + (int(self.team!=sensor_team[sensor_rear])*(1-sensor_to_robot[sensor_rear])*-0.8) + (1-sensor_to_wall[sensor_front])*-0.5  + ((int(self.team==sensor_team[sensor_front]))*(1-sensor_to_robot[sensor_front])*-1) # A MODIFIER
+        translation = sensor_to_robot[sensor_front]*1 + (int(self.team!=sensor_team[sensor_front])*(1-sensor_to_robot[sensor_front])*0.8) + (int(self.team!=sensor_team[sensor_rear])*(1-sensor_to_robot[sensor_rear])*-0.8) + (1-sensor_to_wall[sensor_front])*-0.8  + ((int(self.team==sensor_team[sensor_front]))*(1-sensor_to_robot[sensor_front])*-1) # A MODIFIER
 
         # on va faire un robot qui suit les autres robots, mais dans un premier temps il va chercher par defaut sasn coller au mur + par defaut rotation vers la droite car front est sur le diagonale de bas droite par défaut // après des test vaut mieux par mettre le cas de derrière moins éfficace (possible mais faudrait combiner avec l'option reculer, mais là, notre robot ne sait qu'avancer ce qui simplifie beaucoup) -> (1-sensor_to_robot[sensor_rear]) 
 
