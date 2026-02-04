@@ -35,8 +35,9 @@ class Robot_player(Robot):
         self.old_rotation = 0
         self.old_x= x_0
         self.old_y = y_0
-        self.best_param = 0
+        self.best_param = [0 for i in range(8)]
         self.best_score = 0
+        self.eval=0
 
         super().__init__(x_0, y_0, theta_0, name=name, team=team)
 
@@ -54,24 +55,49 @@ class Robot_player(Robot):
         reset = False
         
         if self.iteration % self.it_per_evaluation == 0:
+            self.eval+=1
+
+
             if self.trial>=501:
                 self.param=self.best_param
                 reset= True
+                if self.eval%3 == 0:
+                    self.theta0 = random.random()*360
             else:
                 if self.iteration > 0:
                     print ("\tparameters           =",self.param)
                     print ("\ttranslations         =",self.log_sum_of_translation,"; rotations =",self.log_sum_of_rotation) # *effective* translation/rotation (ie. measured from displacement)
                     print ("\tdistance from origin =",math.sqrt((self.x-self.x_0)**2+(self.y-self.y_0)**2))
-                print(self.best_score, self.score, self.best_param)
+                    print ("\tscore =",self.score)
 
-                if self.score > self.best_score:
-                    self.best_param = self.param
-                    self.best_score = self.score
-                self.param = [random.randint(-1, 1) for i in range(8)]
+                if self.eval%3 == 0:
+
+                    if self.score > self.best_score:
+                        print(self.score, self.best_score)
+                        self.best_param = self.param.copy()
+                        self.best_score = self.score
+                    print(self.best_score, self.best_param)
+
+                    self.param = self.best_param.copy()  
+
+                    for _ in range(1):   #si on veut changer le nombre de parent a modifier               
+                        indice = random.randint(0,7)
+                        value= random.randint(0,1)
+                        if self.param[indice] == 0:
+                                if value == 0:
+                                    value = -1
+                        else:
+                            value-=1
+
+                        self.param[indice]=value
+                    
+                    self.score = 0
+                else:
+                    self.theta0 = random.random()*360
+
                 self.trial = self.trial + 1
                 print ("Trying strategy no.",self.trial)
                 self.iteration = self.iteration + 1
-                self.score = 0
                 return 0, 0, True # ask for reset
             
 
@@ -103,7 +129,7 @@ class Robot_player(Robot):
         self.old_x = self.x
         self.old_y = self.y
 
-        self.old_translation = self.log_sum_of_translation
+        self.old_translation = translation
         self.old_rotation = rotation
 
         return translation, rotation, reset
