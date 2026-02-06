@@ -9,6 +9,7 @@ class Robot_player(Robot):
     team_name = "Gen"
     robot_id = -1
     iteration = 0
+    memory = 0 
 
     def __init__(self, x_0, y_0, theta_0, name="n/a", team="n/a"):
         global nb_robots
@@ -43,11 +44,9 @@ class Robot_player(Robot):
 
         #rappel : si capte rien alors 1
 
-        #robot que va explorer de haut vers le bas 
-
-        translation = 
-
-        rotation = 
+        #robot qui va explorer de haut vers le bas 
+        
+        if(self.iteration)
 
         self.iteration = self.iteration + 1        
         return translation, rotation, False
