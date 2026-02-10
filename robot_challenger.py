@@ -51,7 +51,7 @@ class Robot_player(Robot):
             #print((sensor_to_robot[sensor_left]),(sensor_to_robot[sensor_front_left]),sensor_to_robot[sensor_front],sensor_to_robot[sensor_front_right],sensor_to_robot[sensor_right])
         
         
-        elif self.robot_id == 2:
+        elif self.robot_id == 1:
 
             
             if self.memory == -2: self.memory = -1
@@ -116,7 +116,7 @@ class Robot_player(Robot):
 
             return translation, rotation, False
             
-        elif self.robot_id == 1:
+        elif self.robot_id == 2:
             # vitesse max mais ralentit lors des murs pour eviter des situations de blocage contre le mur et recul ou ralenti lors des robots de même team
                         #avancement par defaut           si repère un enemie devant                                                          si repère un enemie derrière                                                              ralenti/recul si mur                     si robot allié alors recul/ralentit                                         
             translation = sensor_to_robot[sensor_front]*1 + (int(self.team!=sensor_team[sensor_front])*(1-sensor_to_robot[sensor_front])*0.9) + (int(self.team!=sensor_team[sensor_rear])*(1-sensor_to_robot[sensor_rear])*-0.85) + (1-sensor_to_wall[sensor_front])*-0.8  + ((int(self.team==sensor_team[sensor_front]))*(1-sensor_to_robot[sensor_front])*-1) + ((int(self.team==sensor_team[sensor_front_right]))*(1-sensor_to_robot[sensor_front_right])*-1) + ((int(self.team==sensor_team[sensor_front_left]))*(1-sensor_to_robot[sensor_front_left])*-1) + ((int(self.team==sensor_team[sensor_left]))*(1-sensor_to_robot[sensor_left])*-1) + ((int(self.team==sensor_team[sensor_right]))*(1-sensor_to_robot[sensor_right])*-1) + ((int(self.team==sensor_team[sensor_rear]))*(1-sensor_to_robot[sensor_rear])*1) + ((int(self.team==sensor_team[sensor_rear_right]))*(1-sensor_to_robot[sensor_rear_right])*1) + ((int(self.team==sensor_team[sensor_front_left]))*(1-sensor_to_robot[sensor_front_left])*1)# A MODIFIER
