@@ -46,83 +46,59 @@ class Robot_player(Robot):
 
     def step(self, sensors, sensor_view=None, sensor_robot=None, sensor_team=None):
         
-        # --- 1. LECTURE CAPTEURS ---
-        # On garde les valeurs brutes (0=Mur, 1=Loin) car les puissances marchent mieux avec
         sl = max(0.0, sensors[sensor_left])
         sf = max(0.0, sensors[sensor_front])
         sr = max(0.0, sensors[sensor_right])
 
-        # --- 2. MOUVEMENT DIRECT (FORMULE POLYNOMIALE) ---
-        # Formule : Moteur = Somme( Poids * (Capteur ^ Puissance) )
-        # On utilise abs() sur la puissance pour éviter les bugs mathématiques
-        
-        # A. Calcul Translation (Indices 0 à 5)
-        # P[0]*G^P[1] + P[2]*F^P[3] + P[4]*D^P[5]
         raw_trans = (self.param[0] * sl ** abs(self.param[1]) + 
                      self.param[2] * sf ** abs(self.param[3]) + 
                      self.param[4] * sr ** abs(self.param[5]))
 
-        # B. Calcul Rotation (Indices 6 à 11)
         raw_rot =   (self.param[6] * sl ** abs(self.param[7]) + 
                      self.param[8] * sf ** abs(self.param[9]) + 
                      self.param[10]* sr ** abs(self.param[11]))
 
-        # C. Bornage (Clamping)
-        translation = max(0, min(1, raw_trans)) # Force entre 0 et 1
-        rotation = max(-1, min(1, raw_rot))     # Force entre -1 et 1
+        translation = max(0, min(1, raw_trans)) 
+        rotation = max(-1, min(1, raw_rot))     
 
-        # --- 3. GESTION GENETIQUE (RESET) ---
         change = False
         if self.iteration >= self.it_per_evaluation:
             
-            # 1. On sauvegarde le score de CET essai dans le total
             self.cumulated_score += self.score
-            self.trial += 1 # On passe à l'essai suivant (0 -> 1 -> 2 -> 3 -> 4)
+            self.trial += 1 
             
             print(f"Fin essai {self.trial}/12 - Score essaie: {self.score:.2f} - Total: {self.cumulated_score:.2f}")
             
-            # On demande TOUJOURS au simulateur de changer de terrain à la fin d'un essai
             change = (self.trial % 3 == 0)
 
-            # 2. EST-CE LA FIN DE LA GÉNÉRATION ? (A-t-on fait les 4 terrains ?)
             if self.trial >= 12:
-                self.eval += 1 # On incrémente le numéro de génération
+                self.eval += 1
                 
-                # C'est ICI qu'on compare le TOTAL des 4 terrains avec le meilleur record
                 if self.cumulated_score > self.best_score:
                     self.best_score = self.cumulated_score
-                    self.best_param = self.param[:] # On sauvegarde l'ADN du champion
+                    self.best_param = self.param[:]
                     self.write_best_param()
                     print(f"GEN {self.eval} TERMINÉE : NOUVEAU RECORD = {self.best_score:.2f}")
                 else:
                     print(f"GEN {self.eval} Terminée : Pas d'amélioration ({self.cumulated_score:.2f})")
 
-                # 3. PRÉPARATION DE LA PROCHAINE GÉNÉRATION (MUTATION)
-                # On repart toujours du meilleur génome connu (best_param)
                 self.param = self.best_param[:]
                 
-                # On applique la mutation pour créer le nouveau challenger
                 for i in range(12):
-                    if random.random() < 0.5: # 50% de chance de muter un gène
+                    if random.random() < 0.5: 
                         self.param[i] += random.gauss(0, 0.2)
 
-                # On reset les compteurs de génération
                 self.trial = 0
                 self.cumulated_score = 0
             
             else:
-                # Si on n'a pas fini les 4 essais, on ne fait RIEN aux paramètres.
-                # Le robot garde le même cerveau pour le prochain terrain.
                 pass
 
-            # 4. RESET COMMUN (Pour le prochain run, que ce soit même gen ou nouvelle)
-            self.tab_score = [[0 for _ in range(100)] for _ in range(100)] # Reset mémoire visite
-            self.score = 0      # Reset score courant
-            self.iteration = 0  # Reset chrono
-            self.get_new_pos()  # Reset position physique
+            self.tab_score = [[0 for _ in range(100)] for _ in range(100)]
+            self.score = 0    
+            self.iteration = 0 
+            self.get_new_pos()  
             
-            # True = Reset du robot par le simu
-            # change = True (calculé plus haut) = Changement de map par le simu
             return 0, 0, True, change
 
         # --- 4. CALCUL DU SCORE (NOUVELLE VERSION) ---
