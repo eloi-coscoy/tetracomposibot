@@ -1,6 +1,7 @@
 # Configuration file.
 
 import arenas
+import robot_result
 
 # general -- first three parameters can be overwritten with command-line arguments (cf. "python tetracomposibot.py --help")
 
@@ -32,6 +33,6 @@ def initialize_robots(arena_size=-1, particle_box=-1): # particle_box: size of t
     x_center = arena_size // 2 - particle_box / 2
     y_center = arena_size // 2 - particle_box / 2
     robots = []
-    robots.append(robot_braitenberg_avoider.Robot_player(x_center, y_center, 0, name="My Robot", team="A"))
-    robots.append(robot_stalker_projet.Robot_player(x_center-4, y_center, 0, name="My Robot", team="A"))
+    robots.append(robot_result.Robot_player(x_center, y_center, 0, name="My Robot", team="A"))
+
     return robots
