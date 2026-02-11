@@ -478,7 +478,7 @@ def simulate(my_robots):
         screen = pygame.display.set_mode((arena_size * scale, arena_size * scale))
     iteration = 0
     
-    cur_arena =0 
+    cur_arena =1
     change_arena= False
     while iteration < max_iterations:
 
@@ -537,10 +537,9 @@ def simulate(my_robots):
                 pygame.time.delay(int(1.0/display_fps*1000))
         if verbose_debug:
             print(arena)
-
         if change_arena:
             init_arena()
-            build_arena(config.arenas.get_arena(cur_arena%4))
+            build_arena(config.arenas.get_arena(cur_arena%4+1))
             cur_arena+=1
             change_arena=not change_arena
 
