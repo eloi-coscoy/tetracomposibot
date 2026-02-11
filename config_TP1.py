@@ -6,7 +6,7 @@ import robot_result
 # general -- first three parameters can be overwritten with command-line arguments (cf. "python tetracomposibot.py --help")
 
 display_mode = 0
-arena = 1
+arena = 4
 position = False 
 max_iterations = 501 #401*500
 

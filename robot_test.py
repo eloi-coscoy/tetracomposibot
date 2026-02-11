@@ -5,6 +5,7 @@ import random
 nb_robots = 0
 debug = False
 
+poidmap= [1,2,1,2]
 class Robot_player(Robot):
     team_name = "Optimizer"
     robot_id = -1
@@ -27,6 +28,7 @@ class Robot_player(Robot):
         self.cumulated_score = 0
         self.eval = 0
         self.trial = 0
+        self.cur_map = 0
         
         self.tab_score = [[0 for _ in range(100)] for _ in range(100)]
         
@@ -60,16 +62,20 @@ class Robot_player(Robot):
 
         translation = max(0, min(1, raw_trans)) 
         rotation = max(-1, min(1, raw_rot))     
-
         change = False
         if self.iteration >= self.it_per_evaluation:
-            
-            self.cumulated_score += self.score
+
+            self.cumulated_score += self.score*poidmap[self.cur_map]
             self.trial += 1 
             
-            print(f"Fin essai {self.trial}/12 - Score essaie: {self.score:.2f} - Total: {self.cumulated_score:.2f}")
-            
-            change = (self.trial % 3 == 0)
+            print(f"Fin essai {self.trial}/12 - Score essaie: {self.score:.2f} - Total: {self.cumulated_score:.2f}") 
+
+
+            if self.trial %3 == 0:
+                change = True
+                self.cur_map = (self.cur_map+1)%4
+                print(self.cur_map)
+
 
             if self.trial >= 12:
                 self.eval += 1
@@ -90,6 +96,7 @@ class Robot_player(Robot):
 
                 self.trial = 0
                 self.cumulated_score = 0
+                self.cur_map = 0
             
             else:
                 pass
@@ -101,20 +108,18 @@ class Robot_player(Robot):
             
             return 0, 0, True, change
 
-        # --- 4. CALCUL DU SCORE (NOUVELLE VERSION) ---
         
         ix = int(self.x)
         iy = int(self.y)
         
-        # A. Bonus Case Inconnue
         if self.tab_score[ix][iy] == 0:
-            self.score += 10.0 # Grosse récompense
-            self.tab_score[ix][iy] = 1 # On marque la case
+            self.score += 10.0 
+            self.tab_score[ix][iy] = 1 
         
-        # B. Bonus Distance Origine (Fuir le nid)
-        dist_origine = math.sqrt((self.x - self.x0)**2 + (self.y - self.y0)**2)
+        dist_origine = math.sqrt((self.x - self.x0)**2 + (self.y - self.y0)**2)*2
         
         self.score += dist_origine * 0.1
+
 
         self.iteration += 1
 
